@@ -133,6 +133,6 @@ public class main2 {
     public void pricesOneMonthFullPackCorrectText(){
         PricesPage.OneMonthFullPackCorrectText();
     }
-
+//12
 
 }

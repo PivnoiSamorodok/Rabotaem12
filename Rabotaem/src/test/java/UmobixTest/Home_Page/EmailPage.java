@@ -50,5 +50,5 @@ public class EmailPage extends BasePage{
         Assert.assertTrue(actualURL.contains(expectedURL), "Expected deviceURL doesnt have expected part");
         return true;
     }
-
+//12
 }
