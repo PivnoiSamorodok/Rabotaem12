@@ -125,7 +125,7 @@ public class main2 {
     public void pricesOneMonthTittleCorrectText(){
         PricesPage.OneMonthTittleCorrectText();
     }
-    @Test(dependsOnMethods = {"pricesOneMonthTittleCorrectText"}, alwaysRun = true)
+    @Test(dependsOnMethods = {"pricesOneMonthTittleCorrectText"})
     public void pricesOneMonthFullPackDisplayed(){
         PricesPage.OneMonthFullPackDisplayed();
     }
@@ -133,6 +133,41 @@ public class main2 {
     public void pricesOneMonthFullPackCorrectText(){
         PricesPage.OneMonthFullPackCorrectText();
     }
-//12
+    @Test(dependsOnMethods = {"pricesOneMonthFullPackCorrectText"})
+    public void pricesOneMonthCurrencyCheck(){
+        PricesPage.OneMonthCurrencyCheck();
+    }
+
+    @Test(dependsOnMethods = {"pricesOneMonthCurrencyCheck"})
+    public void pricesOneMonthPriceDsplaying(){
+        PricesPage.OneMonthPriceDisplaying();
+    }
+
+    @Test(dependsOnMethods = {"pricesOneMonthPriceDsplaying"}, alwaysRun = true)
+    public void pricesOneMonthPriceCorrectValue(){
+        PricesPage.OneMonthPriceCorrectDuration();
+    }
+
+    @Test(dependsOnMethods = {"pricesOneMonthPriceCorrectValue"})
+    public void pricesOneMonthPriceCorrectOldOffer(){
+        PricesPage.OneMonthPriceCorrectOldOffer();
+    }
+    @Test(dependsOnMethods = {"pricesOneMonthPriceCorrectValue"}, alwaysRun = true)
+    public void pricesOneMonthTryNowButtonDisplaying(){
+        PricesPage.OneMonthTryNowButtonDisplaying();
+    }
+    @Test(dependsOnMethods = {"pricesOneMonthTryNowButtonDisplaying"})
+    public void pricesOneMonthTryNowButtonCorrectText(){
+        PricesPage.OneMonthTryNowButtonCorrectText();
+    }
+    @Test(dependsOnMethods = {"pricesOneMonthTryNowButtonCorrectText"})
+    public void pricesOneMonthTryNowButtonClick(){
+        PricesPage.OneMonthTryNowButtonClick();
+    }
+    @Test(dependsOnMethods = {"pricesOneMonthTryNowButtonClick"})
+    public void CheckoutURLCompare(){
+        PricesPage.CheckoutURLCompare(driver.getCurrentUrl(), "https://checkout.umobix.com/en/FR/cart/um_mf1_50/umobix");
+    }
+
 
 }
