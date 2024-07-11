@@ -3,6 +3,7 @@ package UmobixTest.Home_Page;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
@@ -26,13 +27,28 @@ public class EmailPage extends BasePage{
         Assert.assertEquals(placeholder, "Enter your valid email", "Inccorrect placeholder name");
     }
 
-    public void emailButtonDisplaying(){
-        WebElement emailButton = driver.findElement(By.cssSelector("#tryStep > div > form > button"));
-        emailButton.isDisplayed();
+    public WebElement emailValueInput(WebElement emailInput){
+        emailInput.sendKeys("dmitry_kavunenko+zxc123MT@tchdm.live");
+        String currentEmail = emailInput.getAttribute("value");
+        Assert.assertEquals(currentEmail, "dmitry_kavunenko+zxc123MT@tchdm.live");
+        return emailInput;
     }
 
+    public WebElement emailButtonDisplaying(){
+        WebElement emailButton = driver.findElement(By.cssSelector("#tryStep > div > form > button"));
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("#tryStep > div > form > button")));
+        emailButton.isDisplayed();
+        return emailButton;
+    }
+
+
     public void emailButtonClick(WebElement emailButton){
-        WebElement
+        emailButton.click();
+    }
+
+    public boolean compareDeviceURl(String actualURL, String expectedURL){
+        Assert.assertTrue(actualURL.contains(expectedURL), "Expected deviceURL doesnt have expected part");
+        return true;
     }
 
 }
