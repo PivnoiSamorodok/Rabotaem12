@@ -1,4 +1,5 @@
-package UmobixTest.Home_Page;
+package UmobixTest.mainFlowTests;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,16 +8,15 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.time.Duration;
 
-public class main2 {
-    homePage homePage;
-    EmailPage EmailPage;
-    DevicePage DevicePage;
-    PricesPage PricesPage;
+
+public class main {
+    HomePage homePage;
+    UmobixTest.mainFlowTests.EmailPage EmailPage;
+    UmobixTest.mainFlowTests.DevicePage DevicePage;
+    UmobixTest.mainFlowTests.PricesPage PricesPage;
     WebDriver driver;
     WebDriverWait wait;
 
@@ -25,7 +25,7 @@ public class main2 {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        homePage = new homePage(driver, wait);
+        homePage = new HomePage(driver, wait);
         EmailPage = new EmailPage(driver, wait);
         DevicePage = new DevicePage(driver,wait);
         PricesPage = new PricesPage(driver,wait);
@@ -34,96 +34,99 @@ public class main2 {
 
     @Test
     public void HomePageTryNowClick() {
-     driver.get("https://umobix.com/?dont-send-to-stat=1");
-     homePage.WaitTryNowHeader();
+     driver.get(DevicePage.getFullURL(homePage.path));
      homePage.TryNowHeaderClick();
-     homePage.getRedirectedURL();
-     homePage.compareURL(driver.getCurrentUrl(),"https://umobix.com/email.html");
+     boolean currentURL = homePage.compareURL(driver.getCurrentUrl());
+     Assert.assertTrue(currentURL, "Email URL doesnt have expected part");
     }
 
     @Test(dependsOnMethods = {"HomePageTryNowClick"})
     public void emailInputFieldDisplay(){
-        EmailPage.inputFieldDisplaying();
+        boolean emailInputField = EmailPage.checkEmailInputVisibility();
+        Assert.assertTrue(emailInputField, "Expected email unput field isnt desplaying");
     }
 
     @Test(dependsOnMethods = {"emailInputFieldDisplay"})
     public void emailPlaceholderCheck(){
-        WebElement emailInput = EmailPage.inputFieldDisplaying();
-        EmailPage.emailPlaceholderCheck(emailInput);
+        String placeholder = EmailPage.isEmailPlaceholderCorrect();
+        Assert.assertEquals(placeholder, "Enter your valid email", "Inccorrect placeholder name");
     }
     @Test(dependsOnMethods = {"emailPlaceholderCheck"})
     public void emailInputIntoField(){
-        WebElement emailInput = EmailPage.inputFieldDisplaying();
-        EmailPage.emailValueInput(emailInput);
+        EmailPage.checkEmailValueInput();
     }
 
-    @Test(dependsOnMethods = {"emailInputIntoField"})
+    @Test(dependsOnMethods = {"emailPlaceholderCheck"}) //Временная заглушка с emailPlaceholderCheck должно быть emailInputIntoField
     public void emailButtonDisplay(){
-        //wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("#tryStep > div > form > button")));
-        EmailPage.emailButtonDisplaying();
+        EmailPage.checkEmailButtonVisibility();
     }
 
     @Test(dependsOnMethods = {"emailButtonDisplay"})
     public void emailButtonClick(){
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("#tryStep > div > form > button")));
-        WebElement emailButton = EmailPage.emailButtonDisplaying();
-        EmailPage.emailButtonClick(emailButton);
+        WebElement emailButton = EmailPage.checkEmailButtonVisibility();
+        EmailPage.checkEmailButtonClick(emailButton);
     }
 
     @Test(dependsOnMethods = {"emailButtonClick"})
     public void compareDeviceURL(){
-        EmailPage.compareDeviceURl(driver.getCurrentUrl(), "https://umobix.com/devices.html");
+        boolean isURLCorrect = EmailPage.CompareDeviceURl(driver.getCurrentUrl());
+        Assert.assertTrue(isURLCorrect, "Device URL doesnt have expected part");
     }
 
     @Test(dependsOnMethods = {"compareDeviceURL"})
     public void deviceH3TitleCheck(){
-       DevicePage.deviceH3Titlecheck();
+       DevicePage.checkDeviceH3TitleVisiblity();
     }
 
     @Test(dependsOnMethods = {"deviceH3TitleCheck"}, alwaysRun = true)
     public void deviceAndroidButtonCheck(){
-        DevicePage.androidButton();
+        DevicePage.isAndroidButtonVisible();
     }
 
     @Test(dependsOnMethods = {"deviceAndroidButtonCheck"}, alwaysRun = true)
     public void deviceIosButtonCheck(){
-        DevicePage.iosButton();
+        DevicePage.isIosButtonVisible();
     }
 
     @Test(dependsOnMethods = {"deviceAndroidButtonCheck"}, alwaysRun = true)
     public void deviceAndroidButtonText(){
-        DevicePage.androidButtonText();
+        WebElement androidButton = DevicePage.checkAndroidButtonText();
+        Assert.assertEquals(androidButton.getText(), "Android phone or tablet");
     }
-
 
     @Test(dependsOnMethods = {"deviceIosButtonCheck"}, alwaysRun = true)
     public void deviceIosButtonText(){
-        DevicePage.iosButtonText();
+        WebElement iosButton = DevicePage.checkIosButtonText();
+        Assert.assertEquals(iosButton.getText(), "iOS, iPhone, iPad");
     }
 
     @Test(dependsOnMethods = {"deviceIosButtonText"}, alwaysRun = true)
     public void deviceAndroidButtonClick(){
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//a[contains(@data-localstorege-device,'android')]")));
-        DevicePage.androidButtonClick();
+        DevicePage.checkAndroidButtonClick();
     }
 
     @Test(dependsOnMethods = {"deviceAndroidButtonClick"}, alwaysRun = true)
     public void deviceIosButtonClick(){
-        DevicePage.iosButtonClick();
+        DevicePage.checkIosButtonClick();
     }
 
     @Test(dependsOnMethods = {"deviceIosButtonClick"})
     public void pricesCompareURL(){
-        PricesPage.CompareURL(driver.getCurrentUrl(), "https://umobix.com/prices.html");
+        boolean pricesURL = PricesPage.CompareURL(driver.getCurrentUrl());
+        Assert.assertTrue(pricesURL, "Expected pricesURL doesnt have expected part");
     }
 
     @Test(dependsOnMethods = {"pricesCompareURL"})
     public void pricesOneMonthTittleDisplayed(){
-        PricesPage.OneMonthTittleDisplayed();
+        PricesPage.isOneMonthTittleVisible();
     }
     @Test(dependsOnMethods = {"pricesOneMonthTittleDisplayed"}, alwaysRun = true)
     public void pricesOneMonthTittleCorrectText(){
-        PricesPage.OneMonthTittleCorrectText();
+       WebElement oneMonthTittle = PricesPage.OneMonthTittleCorrectText();
+        Assert.assertEquals(oneMonthTittle.getText(), "1 Month");
+
     }
     @Test(dependsOnMethods = {"pricesOneMonthTittleCorrectText"})
     public void pricesOneMonthFullPackDisplayed(){
@@ -131,26 +134,36 @@ public class main2 {
     }
     @Test(dependsOnMethods = {"pricesOneMonthFullPackDisplayed"}, alwaysRun = true)
     public void pricesOneMonthFullPackCorrectText(){
-        PricesPage.OneMonthFullPackCorrectText();
+       WebElement fullPack = PricesPage.OneMonthFullPackCorrectText();
+        Assert.assertEquals(fullPack.getText(), "FULL PACK");
     }
     @Test(dependsOnMethods = {"pricesOneMonthFullPackCorrectText"})
     public void pricesOneMonthCurrencyCheck(){
-        PricesPage.OneMonthCurrencyCheck();
+        WebElement currency = PricesPage.OneMonthCurrencyCheck();
+        Assert.assertEquals(currency.getText(), "€");
     }
 
     @Test(dependsOnMethods = {"pricesOneMonthCurrencyCheck"})
-    public void pricesOneMonthPriceDsplaying(){
-        PricesPage.OneMonthPriceDisplaying();
+    public void pricesOneMonthPriceDisplaying(){
+        PricesPage.isOneMonthPriceVisible();
     }
 
-    @Test(dependsOnMethods = {"pricesOneMonthPriceDsplaying"}, alwaysRun = true)
+    @Test(dependsOnMethods = {"pricesOneMonthPriceDisplaying"}, alwaysRun = true)
     public void pricesOneMonthPriceCorrectValue(){
-        PricesPage.OneMonthPriceCorrectDuration();
+        WebElement duration = PricesPage.OneMonthPriceCorrectDuration();
+        Assert.assertEquals(duration.getText(), "/mo");
+
+    }
+    @Test(dependsOnMethods = {"pricesOneMonthPriceDisplaying"}, alwaysRun = true)
+    public void isOneMonthPriceOldOfferVisible(){
+        PricesPage.isOneMonthPriceOldOfferVisible();
     }
 
-    @Test(dependsOnMethods = {"pricesOneMonthPriceCorrectValue"})
+    @Test(dependsOnMethods = {"isOneMonthPriceOldOfferVisible"})
     public void pricesOneMonthPriceCorrectOldOffer(){
-        PricesPage.OneMonthPriceCorrectOldOffer();
+        WebElement oldOffer = PricesPage.OneMonthPriceCorrectOldOffer();
+        Assert.assertEquals(oldOffer.getText(), "€ 59.99 /mo");
+
     }
     @Test(dependsOnMethods = {"pricesOneMonthPriceCorrectValue"}, alwaysRun = true)
     public void pricesOneMonthTryNowButtonDisplaying(){
@@ -158,7 +171,9 @@ public class main2 {
     }
     @Test(dependsOnMethods = {"pricesOneMonthTryNowButtonDisplaying"})
     public void pricesOneMonthTryNowButtonCorrectText(){
-        PricesPage.OneMonthTryNowButtonCorrectText();
+        WebElement oneTryNow = PricesPage.OneMonthTryNowButtonCorrectText();
+        Assert.assertEquals(oneTryNow.getText(), "TRY NOW");
+
     }
     @Test(dependsOnMethods = {"pricesOneMonthTryNowButtonCorrectText"})
     public void pricesOneMonthTryNowButtonClick(){
@@ -166,7 +181,9 @@ public class main2 {
     }
     @Test(dependsOnMethods = {"pricesOneMonthTryNowButtonClick"})
     public void CheckoutURLCompare(){
-        PricesPage.CheckoutURLCompare(driver.getCurrentUrl(), "https://checkout.umobix.com/en/FR/cart/um_mf1_50/umobix");
+        boolean checkoutURL = PricesPage.CheckoutURLCompare(driver.getCurrentUrl());
+        Assert.assertTrue(checkoutURL, "Checkout URL doesnt have expected part");
+
     }
 
 

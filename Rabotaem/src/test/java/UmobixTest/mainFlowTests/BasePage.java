@@ -1,4 +1,4 @@
-package UmobixTest.Home_Page;
+package UmobixTest.mainFlowTests;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -10,5 +10,11 @@ public class BasePage {
     public BasePage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
+    }
+
+    public static final String host = "https://umobix.com";
+
+    public String getFullURL(String path){
+        return host + path;
     }
 }
