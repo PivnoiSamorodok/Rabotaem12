@@ -14,7 +14,7 @@ public class BasePage {
 
     public static final String host = "https://umobix.com";
 
-    public String getFullURL(String path){
+    public static String getFullURL(String path){
         return host + path;
     }
 }

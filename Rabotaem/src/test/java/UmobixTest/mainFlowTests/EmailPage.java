@@ -10,33 +10,34 @@ public class EmailPage extends BasePage {
 
     public static final String path = "/email.html";
 
-    public static final By email_input_selector =By.cssSelector("#tryNowEmail");
-    public static final By email_button_selector =By.cssSelector("#tryStep > div > form > button");
+    public static final By emailInputSelector =By.cssSelector("#tryNowEmail");
+    public static final By emailButtonSelector =By.cssSelector("#tryStep > div > form > button");
 
     public EmailPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
     }
 
     public boolean checkEmailInputVisibility(){
-        WebElement emailInput = driver.findElement(email_input_selector);
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(emailInputSelector));
+        WebElement emailInput = driver.findElement(emailInputSelector);
         return true;
     }
 
     public String isEmailPlaceholderCorrect(){
-        WebElement emailInput = driver.findElement(email_input_selector);
+        WebElement emailInput = driver.findElement(emailInputSelector);
         String placeholder = emailInput.getAttribute("placeholder");
         return placeholder;
     }
 
     public void checkEmailValueInput(){
-        WebElement emailInput = driver.findElement(email_input_selector);
+        WebElement emailInput = driver.findElement(emailInputSelector);
         randomEmailGeneration rndEmail = new randomEmailGeneration(5);
         String randomEmail = rndEmail.GenerateEmail();
         emailInput.sendKeys(randomEmail);
     }
 
     public WebElement checkEmailButtonVisibility(){
-        WebElement emailButton = driver.findElement(email_button_selector);
+        WebElement emailButton = driver.findElement(emailButtonSelector);
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("#tryStep > div > form > button")));
         emailButton.isDisplayed();
         return emailButton;

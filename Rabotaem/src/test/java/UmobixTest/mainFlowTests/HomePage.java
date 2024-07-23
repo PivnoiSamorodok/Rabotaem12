@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class HomePage extends BasePage {
 
-    public static final By header_try_now = By.xpath("/html/body/header/div/nav/div[2]/div[2]/a");
+    public static final By headerTryNow = By.xpath("/html/body/header/div/nav/div[2]/div[2]/a");
 
     public static final String path = "?dont-send-to-stat=1";
     public HomePage(WebDriver driver, WebDriverWait wait) {
@@ -16,11 +16,11 @@ public class HomePage extends BasePage {
     }
 
     private WebElement getHeaderTryNow(){
-        return driver.findElement(header_try_now);
+        return driver.findElement(headerTryNow);
     }
 
     public void TryNowHeaderClick(){
-        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(header_try_now));
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(headerTryNow));
         getHeaderTryNow().click();
     }
 

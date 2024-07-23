@@ -8,11 +8,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
 import java.time.Duration;
 
 
-public class main {
+ public class main {
     HomePage homePage;
     UmobixTest.mainFlowTests.EmailPage EmailPage;
     UmobixTest.mainFlowTests.DevicePage DevicePage;
@@ -43,7 +45,7 @@ public class main {
     @Test(dependsOnMethods = {"HomePageTryNowClick"})
     public void emailInputFieldDisplay(){
         boolean emailInputField = EmailPage.checkEmailInputVisibility();
-        Assert.assertTrue(emailInputField, "Expected email unput field isnt desplaying");
+        Assert.assertTrue(emailInputField, "Expected email input field isnt displaying");
     }
 
     @Test(dependsOnMethods = {"emailInputFieldDisplay"})
@@ -101,18 +103,31 @@ public class main {
         Assert.assertEquals(iosButton.getText(), "iOS, iPhone, iPad");
     }
 
-    @Test(dependsOnMethods = {"deviceIosButtonText"}, alwaysRun = true)
-    public void deviceAndroidButtonClick(){
-        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//a[contains(@data-localstorege-device,'android')]")));
-        DevicePage.checkAndroidButtonClick();
+//    @Test(dependsOnMethods = {"deviceIosButtonText"}, alwaysRun = true)
+//    public void deviceAndroidButtonClick(){
+//        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//a[contains(@data-localstorege-device,'android')]")));
+//        DevicePage.checkAndroidButtonClick();
+//    }
+
+//    @Test(dependsOnMethods = {"deviceAndroidButtonClick"}, alwaysRun = true)
+//    public void deviceIosButtonClick(){
+//        DevicePage.checkIosButtonClick();
+//    }
+
+    @DataProvider(name = "devicesTypes")
+    public Object[][] devicesTypes(){
+        return new Object[][]{
+                {"Android phone or tablet"},
+                {"iOS, iPhone, iPad"}
+        };
     }
 
-    @Test(dependsOnMethods = {"deviceAndroidButtonClick"}, alwaysRun = true)
-    public void deviceIosButtonClick(){
-        DevicePage.checkIosButtonClick();
+    @Test(dataProvider = "devicesTypes", dependsOnMethods = {"deviceIosButtonText"})
+    public void deviceTypeChoosing(String devicesTypes){
+        DevicePage.clickDevicesButton(devicesTypes);
     }
 
-    @Test(dependsOnMethods = {"deviceIosButtonClick"})
+    @Test(dependsOnMethods = {"deviceTypeChoosing"})
     public void pricesCompareURL(){
         boolean pricesURL = PricesPage.CompareURL(driver.getCurrentUrl());
         Assert.assertTrue(pricesURL, "Expected pricesURL doesnt have expected part");
@@ -167,23 +182,32 @@ public class main {
     }
     @Test(dependsOnMethods = {"pricesOneMonthPriceCorrectValue"}, alwaysRun = true)
     public void pricesOneMonthTryNowButtonDisplaying(){
-        PricesPage.OneMonthTryNowButtonDisplaying();
+        PricesPage.isOneMonthTryNowButtonVisible();
     }
     @Test(dependsOnMethods = {"pricesOneMonthTryNowButtonDisplaying"})
     public void pricesOneMonthTryNowButtonCorrectText(){
-        WebElement oneTryNow = PricesPage.OneMonthTryNowButtonCorrectText();
+        WebElement oneTryNow = PricesPage.checkOneMonthTryNowButtonCorrectText();
         Assert.assertEquals(oneTryNow.getText(), "TRY NOW");
 
     }
-    @Test(dependsOnMethods = {"pricesOneMonthTryNowButtonCorrectText"})
-    public void pricesOneMonthTryNowButtonClick(){
-        PricesPage.OneMonthTryNowButtonClick();
+    @DataProvider(name = "subscriptionsTypes")
+    public Object[][] subscriptionsTypes() {
+        return new Object[][]{
+                {"um_mf1_50"},
+                {"um_mf3_90"},
+                {"um_mf12_150"}
+        };
     }
-    @Test(dependsOnMethods = {"pricesOneMonthTryNowButtonClick"})
-    public void CheckoutURLCompare(){
-        boolean checkoutURL = PricesPage.CheckoutURLCompare(driver.getCurrentUrl());
-        Assert.assertTrue(checkoutURL, "Checkout URL doesnt have expected part");
+    @Test(dataProvider = "subscriptionsTypes", dependsOnMethods = {"pricesOneMonthTryNowButtonCorrectText"})
+    public void tryNowSubButtonClick(String subscriptionsTypes){
+        //driver.get(BasePage.getFullURL(PricesPage.path));
+        PricesPage.TryNowButtonClick(subscriptionsTypes);
+    }
 
+    @Test(dependsOnMethods = {"tryNowSubButtonClick"})
+    public void checkoutURLCompare(){
+        boolean checkoutURL = PricesPage.isCheckoutURLCorrect(driver.getCurrentUrl());
+        Assert.assertTrue(checkoutURL, "Checkout URL doesnt have expected part");
     }
 
 
