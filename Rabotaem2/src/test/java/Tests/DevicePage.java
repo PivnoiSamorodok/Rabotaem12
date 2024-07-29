@@ -1,4 +1,4 @@
-package UmobixTest.mainFlowTests;
+package Tests;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -14,9 +14,9 @@ public class DevicePage extends BasePage {
         return path;
 
     }
-    private static final By deviceH3 = By.cssSelector(".choose-platform-title");
-    private static final By androidButton = By.cssSelector("[data-localstorege-device=android]");
-    private static final By iosButton = By.cssSelector("[data-localstorege-device=ios]");
+    private static final By deviceH3 = By.xpath("//h3[contains(@class,'choose-platform-title')]");
+    private static final By androidButton = By.xpath("//a[contains(@data-localstorege-device,'android')]");
+    private static final By iosButton = By.xpath("//a[contains(@data-localstorege-device,'ios')]");
     private static final String deviceButton = "//div[@class='devices-card']//span[contains(text(),'%s')]";
 
     public DevicePage(WebDriver driver, WebDriverWait wait) {
@@ -52,7 +52,7 @@ public class DevicePage extends BasePage {
 
     }
     public void isDevicesButtonClickable(String deviceType) {
-        //driver.get(BasePage.getFullURL(DevicePage.path));
+        driver.get(BasePage.getFullURL(DevicePage.path));
         String devicesButton = String.format(DevicePage.deviceButton, deviceType);
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath(devicesButton)));
         WebElement buttons = driver.findElement(By.xpath(devicesButton));

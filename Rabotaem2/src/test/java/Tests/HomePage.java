@@ -1,4 +1,4 @@
-package UmobixTest.mainFlowTests;
+package Tests;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -11,7 +11,7 @@ public class HomePage extends BasePage {
     private static final By headerTryNow = By.xpath("/html/body/header/div/nav/div[2]/div[2]/a");
 
     private static final String path = "?dont-send-to-stat=1";
-    public String getPath(){
+    public static String getPath(){
         return path;
     }
     public HomePage(WebDriver driver, WebDriverWait wait) {
